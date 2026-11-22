@@ -1,0 +1,260 @@
+{
+  "name": "umay",
+  "displayName": "Umay: Türkçe Yapay Zeka Kod Asistanı",
+  "description": "Umay yapay zekası editörünün içinde: sohbet eder, projendeki dosyaları okur, düzenler, komut çalıştırır. Her değişiklik için önce onayını ister.",
+  "version": "1.0.0",
+  "publisher": "umay-official",
+  "author": "Eray Çiçek (https://github.com/cekYc)",
+  "license": "SEE LICENSE IN LICENSE",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#0d0d10",
+    "theme": "dark"
+  },
+  "homepage": "https://umayzeka.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Umay-Official/Umay-VSCode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Umay-Official/Umay-VSCode/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Programming Languages",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "umay",
+    "yapay zeka",
+    "türkçe",
+    "turkish",
+    "ai",
+    "agent",
+    "ajan",
+    "chat",
+    "sohbet",
+    "kod asistanı",
+    "code assistant",
+    "llm"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Güvenilmeyen bir klasörde Umay yalnızca sohbet eder; dosya okuma, yazma ve komut çalıştırma kapalıdır."
+    },
+    "virtualWorkspaces": false
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "umay",
+          "title": "Umay",
+          "icon": "media/umay.svg"
+        }
+      ]
+    },
+    "views": {
+      "umay": [
+        {
+          "type": "webview",
+          "id": "umay.chat",
+          "name": "Sohbet",
+          "icon": "media/umay.svg",
+          "contextualTitle": "Umay"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "umay.focus",
+        "title": "Umay'ı aç",
+        "category": "Umay"
+      },
+      {
+        "command": "umay.newChat",
+        "title": "Yeni sohbet",
+        "category": "Umay",
+        "icon": "$(add)"
+      },
+      {
+        "command": "umay.history",
+        "title": "Sohbet geçmişi",
+        "category": "Umay",
+        "icon": "$(history)"
+      },
+      {
+        "command": "umay.setKey",
+        "title": "API anahtarı",
+        "category": "Umay",
+        "icon": "$(key)"
+      },
+      {
+        "command": "umay.ask",
+        "title": "Umay'a sor…",
+        "category": "Umay"
+      },
+      {
+        "command": "umay.explain",
+        "title": "Bu kodu açıkla",
+        "category": "Umay"
+      },
+      {
+        "command": "umay.fix",
+        "title": "Hataları bul ve düzelt",
+        "category": "Umay"
+      },
+      {
+        "command": "umay.tests",
+        "title": "Test yaz",
+        "category": "Umay"
+      },
+      {
+        "command": "umay.document",
+        "title": "Açıklama satırları ekle",
+        "category": "Umay"
+      },
+      {
+        "command": "umay.undo",
+        "title": "Son dosya değişikliğini geri al",
+        "category": "Umay"
+      },
+      {
+        "command": "umay.fixDiagnostic",
+        "title": "Umay ile düzelt",
+        "category": "Umay"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "umay.editor",
+        "label": "Umay"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "umay.newChat",
+          "when": "view == umay.chat",
+          "group": "navigation@1"
+        },
+        {
+          "command": "umay.history",
+          "when": "view == umay.chat",
+          "group": "navigation@2"
+        },
+        {
+          "command": "umay.setKey",
+          "when": "view == umay.chat",
+          "group": "navigation@3"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "umay.editor",
+          "group": "0_umay@1"
+        }
+      ],
+      "umay.editor": [
+        {
+          "command": "umay.ask",
+          "group": "1_ask@1"
+        },
+        {
+          "command": "umay.explain",
+          "group": "2_code@1"
+        },
+        {
+          "command": "umay.fix",
+          "group": "2_code@2"
+        },
+        {
+          "command": "umay.tests",
+          "group": "2_code@3"
+        },
+        {
+          "command": "umay.document",
+          "group": "2_code@4"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "umay.fixDiagnostic",
+          "when": "false"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "umay.focus",
+        "key": "ctrl+alt+u",
+        "mac": "cmd+alt+u"
+      }
+    ],
+    "configuration": {
+      "title": "Umay",
+      "properties": {
+        "umay.includeActiveFile": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Mesaja açık dosyanın adını ve seçili kodu ekle. Sohbet kutusunun üstündeki dosya etiketinden mesaj başına da kapatılabilir."
+        },
+        "umay.saveBeforeSend": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Mesaj gönderilmeden önce kaydedilmemiş dosyaları kaydet; böylece Umay dosyaların en son hâlini görür."
+        },
+        "umay.autoApprove.writes": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Dosya yazma ve düzenlemelerini **onay sormadan** uygula. Kapalıyken her değişiklik önce farkıyla gösterilir."
+        },
+        "umay.autoApprove.commands": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Komutları ve Python kodunu **onay sormadan** çalıştır. Komutlar yalıtılmış değildir; açmadan önce dikkatli düşün."
+        },
+        "umay.baseUrl": {
+          "type": "string",
+          "default": "https://umayzeka.com/v1",
+          "markdownDescription": "Gelişmiş: Umay API adresi. HTTPS zorunludur; yalnızca `localhost` için HTTP kabul edilir."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "test": "node --test \"test/*.test.js\"",
+    "test:vscode": "node scripts/build.mjs && node test/vscode/run.js",
+    "check": "node scripts/build.mjs && node --check dist/extension.js && node --check media/chat.js",
+    "package": "vsce package --no-dependencies",
+    "publish:marketplace": "vsce publish --no-dependencies",
+    "publish:openvsx": "ovsx publish --no-dependencies",
+    "vscode:prepublish": "node scripts/build.mjs --production"
+  },
+  "dependencies": {
+    "@vscode/codicons": "^0.0.46-24",
+    "diff": "^9.0.0",
+    "dompurify": "^3.4.18",
+    "marked": "^18.2.1"
+  },
+  "devDependencies": {
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.1.1",
+    "esbuild": "^0.28.2",
+    "ovsx": "^1.4.0"
+  }
+}

@@ -1,0 +1,44 @@
+# A tag like v1.0.1 tests, packages and publishes the extension: GitHub Release, Visual Studio Marketplace
+# (VSCE_PAT) and Open VSX (OVSX_PAT). A store whose secret is missing is skipped.
+name: Yayınla
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run test:vscode
+      - name: Paketle
+        shell: bash
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then echo "Etiket ($GITHUB_REF_NAME) package.json sürümüyle ($version) aynı değil"; exit 1; fi
+          npx vsce package --no-dependencies --out "umay-$version.vsix"
+          echo "VSIX=umay-$version.vsix" >> "$GITHUB_ENV"
+      - name: GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "$VSIX" --title "Umay $GITHUB_REF_NAME" --notes "Kurulum: Eklentiler → ··· → Install from VSIX... ile $VSIX dosyasını seç. Değişiklikler: CHANGELOG.md"
+      - name: Visual Studio Marketplace
+        if: env.VSCE_PAT != ''
+        run: npx vsce publish --packagePath ${{ env.VSIX }} -p ${{ env.VSCE_PAT }}
+      - name: Open VSX
+        if: env.OVSX_PAT != ''
+        run: npx ovsx publish ${{ env.VSIX }} -p ${{ env.OVSX_PAT }}

@@ -35,7 +35,8 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" "$VSIX" --title "Umay $GITHUB_REF_NAME" --notes "Kurulum: Eklentiler → ··· → Install from VSIX... ile $VSIX dosyasını seç. Değişiklikler: CHANGELOG.md"
+        run: |
+          gh release create "$GITHUB_REF_NAME" "$VSIX" --title "Umay $GITHUB_REF_NAME" --notes "Kurulum: Eklentiler → ··· → Install from VSIX... ile $VSIX dosyasını seç. Değişiklikler: CHANGELOG.md"
       - name: Visual Studio Marketplace
         if: env.VSCE_PAT != ''
         run: npx vsce publish --packagePath ${{ env.VSIX }} -p ${{ env.VSCE_PAT }}
